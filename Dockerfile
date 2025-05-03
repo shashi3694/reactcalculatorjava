@@ -16,5 +16,20 @@ COPY . .
 # Expose the port your app runs on
 EXPOSE 3000
 
+# Edited from this line Add a group and user
+RUN groupadd -r appgroup && useradd -r -g appgroup -m -s /bin/bash appuser
+
+# Set permissions (optional but good practice)
+WORKDIR /app
+COPY . .
+RUN chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
+# TO this line Run the app
+CMD ["node", "server.js"]
+
+
 # Start the app
 CMD ["node", "server.js"]
